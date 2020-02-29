@@ -14,28 +14,26 @@ info:
 host: "virtserver.swaggerhub.com"
 basePath: "/anjovisk/order-tracker/1.0.0"
 tags:
-- name: "tracking"
+- name: "order-tracking"
   description: "Informações de rastreamento dos pedidos."
   externalDocs:
     description: "Find out more"
     url: "http://swagger.io"
 schemes:
 - "https"
-- "http"
 paths:
-  /tracking:
+  /trackings:
     get:
       tags:
-      - "tracking"
+      - "trackings"
       summary: "Obtém o rastreamento de um pedido"
       description: "Lista as movimentações de um pedido de acordo com o código de\
         \ rastreamento"
-      operationId: "findByTrackingCode"
+      operationId: "findByTrackingNumber"
       produces:
-      - "application/xml"
       - "application/json"
       parameters:
-      - name: "trackingCode"
+      - name: "trackingNumber"
         in: "query"
         description: "Código de rastreamento para obter as movimentações"
         required: true
@@ -49,7 +47,7 @@ paths:
               $ref: "#/definitions/Tracking"
         "404":
           description: "Encomenda não encontrada"
-      x-swagger-router-controller: "Tracking"
+      x-swagger-router-controller: "Trackings"
   /orders:
     post:
       tags:
@@ -75,11 +73,11 @@ paths:
         "405":
           description: "Invalid input"
       x-swagger-router-controller: "Orders"
-  /orders/{orderNumber}:
+  /orders/{orderId}:
     get:
       tags:
       - "orders"
-      summary: "Obtém um pedido pelo número"
+      summary: "Obtém um pedido pelo id"
       description: "Retorna um único pedido"
       operationId: "getOrderById"
       produces:
@@ -89,9 +87,9 @@ paths:
         in: "header"
         required: false
         type: "string"
-      - name: "orderNumber"
+      - name: "orderId"
         in: "path"
-        description: "Número do pedido"
+        description: "Id do pedido"
         required: true
         type: "string"
       responses:
@@ -116,9 +114,9 @@ paths:
         in: "header"
         required: false
         type: "string"
-      - name: "orderNumber"
+      - name: "orderId"
         in: "path"
-        description: "Número do pedido"
+        description: "Id do pedido"
         required: true
         type: "string"
       - in: "body"
@@ -151,9 +149,9 @@ paths:
         in: "header"
         required: false
         type: "string"
-      - name: "orderNumber"
+      - name: "orderId"
         in: "path"
-        description: "Número do pedido que será excluído"
+        description: "Id do pedido que será excluído"
         required: true
         type: "string"
       responses:
@@ -162,7 +160,7 @@ paths:
         "404":
           description: "Pedido não encontrado"
       x-swagger-router-controller: "Orders"
-  /orders/{orderNumber}/trackings:
+  /orders/{orderId}/trackings:
     get:
       tags:
       - "trackings"
@@ -176,9 +174,9 @@ paths:
         in: "header"
         required: false
         type: "string"
-      - name: "orderNumber"
+      - name: "orderId"
         in: "path"
-        description: "Número do pedido"
+        description: "Id do pedido"
         required: true
         type: "string"
       responses:
@@ -205,9 +203,9 @@ paths:
         in: "header"
         required: false
         type: "string"
-      - name: "orderNumber"
+      - name: "orderId"
         in: "path"
-        description: "Número do pedido"
+        description: "Id do pedido"
         required: true
         type: "string"
       - in: "body"
@@ -229,12 +227,6 @@ definitions:
     - "date"
     - "movement"
     properties:
-      trackingId:
-        type: "integer"
-        format: "int64"
-      trackingCode:
-        type: "string"
-        description: "Código de rastreamento"
       details:
         type: "string"
         description: "Detalhes da movimentação, de/para, etc."
@@ -245,67 +237,56 @@ definitions:
         type: "string"
         description: "Tipo de movimentação"
         enum:
-        - "posted"
-        - "movement"
-        - "out_for_delivery"
-        - "delivery_failed"
-        - "delivered"
-        - "returned"
+        - "POSTED"
+        - "MOVEMENT"
+        - "OUT_FOR_DELIVERY"
+        - "DELIVERY_FAILED"
+        - "DELIVERED"
+        - "RETURNED"
     example:
       date: "2000-01-23T04:56:07.000+00:00"
-      trackingCode: "trackingCode"
       details: "details"
-      movement: "posted"
-      trackingId: 0
+      movement: "POSTED"
   Order:
     type: "object"
     required:
     - "orderNumber"
-    - "recipient"
     properties:
+      _id:
+        type: "string"
+        description: "Identificador único do pedido"
       orderNumber:
         type: "string"
         description: "Número do pedido"
-      recipient:
-        $ref: "#/definitions/Recipient"
-      registryDate:
+      trackingNumber:
+        type: "string"
+        description: "Número de rastreamento"
+      registrationDate:
         type: "string"
         format: "date-time"
       lastUpdate:
         type: "string"
         format: "date-time"
-      trackingCode:
-        type: "string"
-        description: "Código de rastreamento"
       status:
         type: "string"
         description: "Order Status"
         enum:
-        - "posted"
-        - "on_route"
-        - "out_for_delivery"
-        - "delivery_failed"
-        - "delivered"
-        - "returning"
-        - "returned"
+        - "POSTED"
+        - "ON_ROUTE"
+        - "OUT_FOR_DELIVERY"
+        - "DELIVERY_FAILED"
+        - "DELIVERED"
+        - "RETURNING"
+        - "RETURNED"
     xml:
       name: "Order"
     example:
       orderNumber: "orderNumber"
       lastUpdate: "2000-01-23T04:56:07.000+00:00"
-      recipient:
-        address:
-          number: "number"
-          city: "city"
-          street: "street"
-          postalCode: "postalCode"
-          state: "state"
-          complement: "complement"
-        document: "document"
-        name: "name"
-      trackingCode: "trackingCode"
-      registryDate: "2000-01-23T04:56:07.000+00:00"
-      status: "posted"
+      _id: "_id"
+      registrationDate: "2000-01-23T04:56:07.000+00:00"
+      trackingNumber: "trackingNumber"
+      status: "POSTED"
   Recipient:
     type: "object"
     required:
@@ -322,16 +303,6 @@ definitions:
         $ref: "#/definitions/Address"
     xml:
       name: "Recipient"
-    example:
-      address:
-        number: "number"
-        city: "city"
-        street: "street"
-        postalCode: "postalCode"
-        state: "state"
-        complement: "complement"
-      document: "document"
-      name: "name"
   Address:
     type: "object"
     required:
@@ -361,13 +332,6 @@ definitions:
         description: "Estado"
     xml:
       name: "Address"
-    example:
-      number: "number"
-      city: "city"
-      street: "street"
-      postalCode: "postalCode"
-      state: "state"
-      complement: "complement"
 externalDocs:
   description: "Find out more about Swagger"
   url: "http://swagger.io"

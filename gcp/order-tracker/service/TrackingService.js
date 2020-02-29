@@ -1,6 +1,6 @@
 'use strict';
 
-const Tracking = require('../models/trackings');
+//const Tracking = require('../models/trackings');
 
 
 /**
@@ -10,7 +10,7 @@ const Tracking = require('../models/trackings');
  * trackingCode String Código de rastreamento para obter as movimentações
  * returns List
  **/
-exports.findByTrackingCode = function (trackingCode) {
+/* exports.findByTrackingCode = function (trackingCode) {
   return new Promise(function (resolve, reject) {
     console.log('listing trackings...');
     Tracking.find({ trackingId: trackingCode}).exec(function (err, trackings) {
@@ -26,5 +26,5 @@ exports.findByTrackingCode = function (trackingCode) {
       }
     });
   });
-}
+} */
 

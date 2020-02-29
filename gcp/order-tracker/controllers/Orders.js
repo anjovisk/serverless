@@ -16,7 +16,7 @@ module.exports.addOrder = function addOrder (req, res, next) {
 };
 
 module.exports.deleteOrder = function deleteOrder (req, res, next) {
-  var orderNumber = req.swagger.params['orderNumber'].value;
+  var orderNumber = req.swagger.params['orderId'].value;
   var api_key = req.swagger.params['api_key'].value;
   Orders.deleteOrder(orderNumber,api_key)
     .then(function (response) {
@@ -28,7 +28,7 @@ module.exports.deleteOrder = function deleteOrder (req, res, next) {
 };
 
 module.exports.getOrderById = function getOrderById (req, res, next) {
-  var orderNumber = req.swagger.params['orderNumber'].value;
+  var orderNumber = req.swagger.params['orderId'].value;
   var api_key = req.swagger.params['api_key'].value;
   Orders.getOrderById(orderNumber,api_key)
     .then(function (response) {
@@ -40,7 +40,7 @@ module.exports.getOrderById = function getOrderById (req, res, next) {
 };
 
 module.exports.updateOrder = function updateOrder (req, res, next) {
-  var orderNumber = req.swagger.params['orderNumber'].value;
+  var orderNumber = req.swagger.params['orderId'].value;
   var body = req.swagger.params['body'].value;
   var api_key = req.swagger.params['api_key'].value;
   Orders.updateOrder(orderNumber,body,api_key)

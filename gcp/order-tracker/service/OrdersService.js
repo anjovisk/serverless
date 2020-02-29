@@ -1,5 +1,6 @@
 'use strict';
-
+const uuid = require('uuid');
+const Order = require('../models/orders');
 
 /**
  * Adiciona um novo pedido para rastreamento.
@@ -8,9 +9,28 @@
  * api_key String  (optional)
  * no response value expected for this operation
  **/
-exports.addOrder = function(body,api_key) {
-  return new Promise(function(resolve, reject) {
-    resolve();
+exports.addOrder = function (body, api_key) {
+  return new Promise(function (resolve, reject) {
+    console.log(body);
+    try {
+      var order = new Order(body);
+      order.trackingNumber = uuid.v4();
+      order.registrationDate = new Date();
+      console.log('Salvando:');
+      console.log(order);
+      order.save(function (err) {
+        if (err) {
+          console.log(err);
+          resolve();
+        } else {
+          console.log(JSON.stringify(order));
+          resolve(order);
+        }
+      });
+    } catch (e) {
+      console.log(e);
+      resolve();
+    }
   });
 }
 
@@ -18,52 +38,40 @@ exports.addOrder = function(body,api_key) {
 /**
  * Remove um pedido
  *
- * orderNumber String Número do pedido que será excluído
+ * orderId String Id do pedido que será excluído
  * api_key String  (optional)
  * no response value expected for this operation
  **/
-exports.deleteOrder = function(orderNumber,api_key) {
-  return new Promise(function(resolve, reject) {
-    resolve();
+exports.deleteOrder = function (orderId, api_key) {
+  return new Promise(function (resolve, reject) {
+    Order.findOneAndRemove({ _id: new ObjectId(orderId) }).exec(function (err) {
+      if (err) {
+        console.log(err);
+      }
+      resolve();
+    });
   });
 }
 
 
 /**
- * Obtém um pedido pelo número
+ * Obtém um pedido pelo id
  * Retorna um único pedido
  *
- * orderNumber String Número do pedido
+ * orderId String Id do pedido
  * api_key String  (optional)
  * returns Order
  **/
-exports.getOrderById = function(orderNumber,api_key) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "orderNumber" : "orderNumber",
-  "lastUpdate" : "2000-01-23T04:56:07.000+00:00",
-  "recipient" : {
-    "address" : {
-      "number" : "number",
-      "city" : "city",
-      "street" : "street",
-      "postalCode" : "postalCode",
-      "state" : "state",
-      "complement" : "complement"
-    },
-    "document" : "document",
-    "name" : "name"
-  },
-  "trackingCode" : "trackingCode",
-  "registryDate" : "2000-01-23T04:56:07.000+00:00",
-  "status" : "posted"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.getOrderById = function (orderId, api_key) {
+  return new Promise(function (resolve, reject) {
+    console.log('getting order... ' + orderId);
+    Order.findOne({ _id: new ObjectId(orderId) }).exec(function (err, order) {
+      if (err) {
+        console.log(err);
+      } else {
+        resolve(order);
+      }
+    });
   });
 }
 
@@ -71,38 +79,32 @@ exports.getOrderById = function(orderNumber,api_key) {
 /**
  * Atualiza as informações de um pedido.
  *
- * orderNumber String Número do pedido
+ * orderId String Id do pedido
  * body Order Pedido que será rastreado.
  * api_key String  (optional)
  * returns Order
  **/
-exports.updateOrder = function(orderNumber,body,api_key) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "orderNumber" : "orderNumber",
-  "lastUpdate" : "2000-01-23T04:56:07.000+00:00",
-  "recipient" : {
-    "address" : {
-      "number" : "number",
-      "city" : "city",
-      "street" : "street",
-      "postalCode" : "postalCode",
-      "state" : "state",
-      "complement" : "complement"
-    },
-    "document" : "document",
-    "name" : "name"
-  },
-  "trackingCode" : "trackingCode",
-  "registryDate" : "2000-01-23T04:56:07.000+00:00",
-  "status" : "posted"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.updateOrder = function (orderId, body, api_key) {
+  return new Promise(function (resolve, reject) {
+    console.log('updating order...' + orderId);
+    Order.findOne({ _id: new ObjectId(orderId) }).exec(function (err, order) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (order) {
+          order.orderNumber = body.orderNumber;
+          order.save(function (err) {
+            if (err) {
+              console.log(err);
+              resolve();
+            } else {
+              resolve(updatedOrder);
+            }
+          });
+        } else {
+          resolve();
+        }
+      }
+    });
   });
 }
-

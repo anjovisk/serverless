@@ -1,6 +1,6 @@
 'use strict';
 
-var utils = require('../utils/writer.js');
+/* var utils = require('../utils/writer.js');
 var Tracking = require('../service/TrackingService');
 
 module.exports.findByTrackingCode = function findByTrackingCode(req, res, next) {
@@ -12,4 +12,4 @@ module.exports.findByTrackingCode = function findByTrackingCode(req, res, next) 
     .catch(function (response) {
       utils.writeJson(res, response);
     });
-};
+}; */
