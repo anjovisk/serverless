@@ -1,0 +1,373 @@
+---
+swagger: "2.0"
+info:
+  description: "API para acompanhamento de pedidos.\n[http://swagger.io](http://swagger.io)\
+    \ or on \n[irc.freenode.net, #swagger](http://swagger.io/irc/).\n"
+  version: "1.0.0"
+  title: "Order Tracking"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "anjovisk@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "virtserver.swaggerhub.com"
+basePath: "/anjovisk/order-tracker/1.0.0"
+tags:
+- name: "tracking"
+  description: "Informações de rastreamento dos pedidos."
+  externalDocs:
+    description: "Find out more"
+    url: "http://swagger.io"
+schemes:
+- "https"
+- "http"
+paths:
+  /tracking:
+    get:
+      tags:
+      - "tracking"
+      summary: "Obtém o rastreamento de um pedido"
+      description: "Lista as movimentações de um pedido de acordo com o código de\
+        \ rastreamento"
+      operationId: "findByTrackingCode"
+      produces:
+      - "application/xml"
+      - "application/json"
+      parameters:
+      - name: "trackingCode"
+        in: "query"
+        description: "Código de rastreamento para obter as movimentações"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Tracking"
+        "404":
+          description: "Encomenda não encontrada"
+      x-swagger-router-controller: "Tracking"
+  /orders:
+    post:
+      tags:
+      - "orders"
+      summary: "Adiciona um novo pedido para rastreamento."
+      operationId: "addOrder"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Pedido que será rastreado."
+        required: true
+        schema:
+          $ref: "#/definitions/Order"
+      responses:
+        "405":
+          description: "Invalid input"
+      x-swagger-router-controller: "Orders"
+  /orders/{orderNumber}:
+    get:
+      tags:
+      - "orders"
+      summary: "Obtém um pedido pelo número"
+      description: "Retorna um único pedido"
+      operationId: "getOrderById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "orderNumber"
+        in: "path"
+        description: "Número do pedido"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Order"
+        "404":
+          description: "Order not found"
+      x-swagger-router-controller: "Orders"
+    put:
+      tags:
+      - "orders"
+      summary: "Atualiza as informações de um pedido."
+      operationId: "updateOrder"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "orderNumber"
+        in: "path"
+        description: "Número do pedido"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Pedido que será rastreado."
+        required: true
+        schema:
+          $ref: "#/definitions/Order"
+      responses:
+        "201":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Order"
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Order not found"
+        "405":
+          description: "Validation exception"
+      x-swagger-router-controller: "Orders"
+    delete:
+      tags:
+      - "orders"
+      summary: "Remove um pedido"
+      operationId: "deleteOrder"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "orderNumber"
+        in: "path"
+        description: "Número do pedido que será excluído"
+        required: true
+        type: "string"
+      responses:
+        "400":
+          description: "Invalid ID supplied"
+        "404":
+          description: "Pedido não encontrado"
+      x-swagger-router-controller: "Orders"
+  /orders/{orderNumber}/trackings:
+    get:
+      tags:
+      - "trackings"
+      summary: "Obtém as movimentações de um pedido"
+      description: "Retorna uma lista de movimentações"
+      operationId: "getTrackings"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "orderNumber"
+        in: "path"
+        description: "Número do pedido"
+        required: true
+        type: "string"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Tracking"
+        "404":
+          description: "Order not found"
+      x-swagger-router-controller: "Trackings"
+    post:
+      tags:
+      - "trackings"
+      summary: "Adiciona uma movimentação"
+      operationId: "addTracking"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "api_key"
+        in: "header"
+        required: false
+        type: "string"
+      - name: "orderNumber"
+        in: "path"
+        description: "Número do pedido"
+        required: true
+        type: "string"
+      - in: "body"
+        name: "body"
+        description: "Pedido que será rastreado."
+        required: true
+        schema:
+          $ref: "#/definitions/Tracking"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Tracking"
+      x-swagger-router-controller: "Trackings"
+definitions:
+  Tracking:
+    type: "object"
+    required:
+    - "date"
+    - "movement"
+    properties:
+      trackingId:
+        type: "integer"
+        format: "int64"
+      trackingCode:
+        type: "string"
+        description: "Código de rastreamento"
+      details:
+        type: "string"
+        description: "Detalhes da movimentação, de/para, etc."
+      date:
+        type: "string"
+        format: "date-time"
+      movement:
+        type: "string"
+        description: "Tipo de movimentação"
+        enum:
+        - "posted"
+        - "movement"
+        - "out_for_delivery"
+        - "delivery_failed"
+        - "delivered"
+        - "returned"
+    example:
+      date: "2000-01-23T04:56:07.000+00:00"
+      trackingCode: "trackingCode"
+      details: "details"
+      movement: "posted"
+      trackingId: 0
+  Order:
+    type: "object"
+    required:
+    - "orderNumber"
+    - "recipient"
+    properties:
+      orderNumber:
+        type: "string"
+        description: "Número do pedido"
+      recipient:
+        $ref: "#/definitions/Recipient"
+      registryDate:
+        type: "string"
+        format: "date-time"
+      lastUpdate:
+        type: "string"
+        format: "date-time"
+      trackingCode:
+        type: "string"
+        description: "Código de rastreamento"
+      status:
+        type: "string"
+        description: "Order Status"
+        enum:
+        - "posted"
+        - "on_route"
+        - "out_for_delivery"
+        - "delivery_failed"
+        - "delivered"
+        - "returning"
+        - "returned"
+    xml:
+      name: "Order"
+    example:
+      orderNumber: "orderNumber"
+      lastUpdate: "2000-01-23T04:56:07.000+00:00"
+      recipient:
+        address:
+          number: "number"
+          city: "city"
+          street: "street"
+          postalCode: "postalCode"
+          state: "state"
+          complement: "complement"
+        document: "document"
+        name: "name"
+      trackingCode: "trackingCode"
+      registryDate: "2000-01-23T04:56:07.000+00:00"
+      status: "posted"
+  Recipient:
+    type: "object"
+    required:
+    - "address"
+    - "name"
+    properties:
+      name:
+        type: "string"
+        description: "Nome do destinatário"
+      document:
+        type: "string"
+        description: "RG do destinatário"
+      address:
+        $ref: "#/definitions/Address"
+    xml:
+      name: "Recipient"
+    example:
+      address:
+        number: "number"
+        city: "city"
+        street: "street"
+        postalCode: "postalCode"
+        state: "state"
+        complement: "complement"
+      document: "document"
+      name: "name"
+  Address:
+    type: "object"
+    required:
+    - "city"
+    - "number"
+    - "postalCode"
+    - "state"
+    - "street"
+    properties:
+      postalCode:
+        type: "string"
+        description: "Código postal (CEP)"
+      street:
+        type: "string"
+        description: "Logradouro"
+      number:
+        type: "string"
+        description: "Número"
+      complement:
+        type: "string"
+        description: "Complemento"
+      city:
+        type: "string"
+        description: "Cidade"
+      state:
+        type: "string"
+        description: "Estado"
+    xml:
+      name: "Address"
+    example:
+      number: "number"
+      city: "city"
+      street: "street"
+      postalCode: "postalCode"
+      state: "state"
+      complement: "complement"
+externalDocs:
+  description: "Find out more about Swagger"
+  url: "http://swagger.io"
