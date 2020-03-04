@@ -2,9 +2,10 @@
 
 /* var utils = require('../utils/writer.js');
 var Tracking = require('../service/TrackingService');
-
+*/
 module.exports.findByTrackingCode = function findByTrackingCode(req, res, next) {
-  var trackingCode = req.swagger.params['trackingCode'].value;
+  console.log('acessando findByTrackingCode: remover função');
+  /*var trackingCode = req.swagger.params['trackingCode'].value;
   Tracking.findByTrackingCode(trackingCode)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -12,4 +13,5 @@ module.exports.findByTrackingCode = function findByTrackingCode(req, res, next) 
     .catch(function (response) {
       utils.writeJson(res, response);
     });
-}; */
+    */
+};

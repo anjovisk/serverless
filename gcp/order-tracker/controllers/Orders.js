@@ -16,9 +16,9 @@ module.exports.addOrder = function addOrder (req, res, next) {
 };
 
 module.exports.deleteOrder = function deleteOrder (req, res, next) {
-  var orderNumber = req.swagger.params['orderId'].value;
+  var orderId = req.swagger.params['orderId'].value;
   var api_key = req.swagger.params['api_key'].value;
-  Orders.deleteOrder(orderNumber,api_key)
+  Orders.deleteOrder(orderId,api_key)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -28,9 +28,9 @@ module.exports.deleteOrder = function deleteOrder (req, res, next) {
 };
 
 module.exports.getOrderById = function getOrderById (req, res, next) {
-  var orderNumber = req.swagger.params['orderId'].value;
+  var orderId = req.swagger.params['orderId'].value;
   var api_key = req.swagger.params['api_key'].value;
-  Orders.getOrderById(orderNumber,api_key)
+  Orders.getOrderById(orderId,api_key)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -40,10 +40,10 @@ module.exports.getOrderById = function getOrderById (req, res, next) {
 };
 
 module.exports.updateOrder = function updateOrder (req, res, next) {
-  var orderNumber = req.swagger.params['orderId'].value;
+  var orderId = req.swagger.params['orderId'].value;
   var body = req.swagger.params['body'].value;
   var api_key = req.swagger.params['api_key'].value;
-  Orders.updateOrder(orderNumber,body,api_key)
+  Orders.updateOrder(orderId,body,api_key)
     .then(function (response) {
       utils.writeJson(res, response);
     })

@@ -4,10 +4,10 @@ var utils = require('../utils/writer.js');
 var Trackings = require('../service/TrackingsService');
 
 module.exports.addTracking = function addTracking (req, res, next) {
-  var orderNumber = req.swagger.params['orderNumber'].value;
+  var orderId = req.swagger.params['orderId'].value;
   var body = req.swagger.params['body'].value;
   var api_key = req.swagger.params['api_key'].value;
-  Trackings.addTracking(orderNumber,body,api_key)
+  Trackings.addTracking(orderId,body,api_key)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -17,9 +17,9 @@ module.exports.addTracking = function addTracking (req, res, next) {
 };
 
 module.exports.getTrackings = function getTrackings (req, res, next) {
-  var orderNumber = req.swagger.params['orderNumber'].value;
+  var orderId = req.swagger.params['orderId'].value;
   var api_key = req.swagger.params['api_key'].value;
-  Trackings.getTrackings(orderNumber,api_key)
+  Trackings.getTrackings(orderId,api_key)
     .then(function (response) {
       utils.writeJson(res, response);
     })

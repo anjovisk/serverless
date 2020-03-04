@@ -1,4 +1,6 @@
 'use strict';
+var ObjectId = require('mongoose').Types.ObjectId;
+const Order = require('../models/orders');
 
 //const Tracking = require('../models/trackings');
 
@@ -63,6 +65,7 @@
 //---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------
+
 /**
  * Adiciona uma movimentação
  *
@@ -71,47 +74,35 @@
  * api_key String  (optional)
  * returns Tracking
  **/
-exports.addTracking = function(orderId,body,api_key) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "date" : "2000-01-23T04:56:07.000+00:00",
-  "details" : "details",
-  "movement" : "POSTED"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
-}
-
-
-/**
- * Obtém o rastreamento de um pedido
- * Lista as movimentações de um pedido de acordo com o código de rastreamento
- *
- * trackingNumber String Código de rastreamento para obter as movimentações
- * returns List
- **/
-exports.findByTrackingNumber = function(trackingNumber) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "date" : "2000-01-23T04:56:07.000+00:00",
-  "details" : "details",
-  "movement" : "POSTED"
-}, {
-  "date" : "2000-01-23T04:56:07.000+00:00",
-  "details" : "details",
-  "movement" : "POSTED"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+exports.addTracking = function (orderId, body, api_key) {
+  return new Promise(function (resolve, reject) {
+    console.log('updating tracking...' + orderId);
+    Order.findOne({ _id: new ObjectId(orderId) }).exec(function (err, order) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (order) {
+          console.log('instanciando novo tracking');
+          console.log(body);
+          if (!order.movements) {
+            order.movements = [];
+          }
+          console.log(order.movements);
+          var tracking = order.movements.create(body);
+          order.movements.push(tracking);
+          order.save(function (err) {
+            if (err) {
+              console.log(err);
+              resolve();
+            } else {
+              resolve(tracking);
+            }
+          });
+        } else {
+          resolve();
+        }
+      }
+    });
   });
 }
 
@@ -124,18 +115,18 @@ exports.findByTrackingNumber = function(trackingNumber) {
  * api_key String  (optional)
  * returns List
  **/
-exports.getTrackings = function(orderId,api_key) {
-  return new Promise(function(resolve, reject) {
+exports.getTrackings = function (orderId, api_key) {
+  return new Promise(function (resolve, reject) {
     var examples = {};
-    examples['application/json'] = [ {
-  "date" : "2000-01-23T04:56:07.000+00:00",
-  "details" : "details",
-  "movement" : "POSTED"
-}, {
-  "date" : "2000-01-23T04:56:07.000+00:00",
-  "details" : "details",
-  "movement" : "POSTED"
-} ];
+    examples['application/json'] = [{
+      "date": "2000-01-23T04:56:07.000+00:00",
+      "details": "details",
+      "movement": "POSTED"
+    }, {
+      "date": "2000-01-23T04:56:07.000+00:00",
+      "details": "details",
+      "movement": "POSTED"
+    }];
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {

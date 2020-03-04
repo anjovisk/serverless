@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const Tracking = new Schema ({
-    trackingId: { 
-        type: String, 
-        required: true 
-    },
     details: { 
         type: String,
         required: true 
@@ -51,3 +47,4 @@ const Order = new Schema ({
 });
 
 module.exports = mongoose.model('Order', Order);
+//module.exports = mongoose.model('Tracking', Tracking);

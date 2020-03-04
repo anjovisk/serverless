@@ -1,6 +1,8 @@
 'use strict';
+var ObjectId = require('mongoose').Types.ObjectId;
 const uuid = require('uuid');
 const Order = require('../models/orders');
+//const Tracking = require('../models/orders');
 
 /**
  * Adiciona um novo pedido para rastreamento.
@@ -99,6 +101,32 @@ exports.updateOrder = function (orderId, body, api_key) {
               resolve();
             } else {
               resolve(updatedOrder);
+            }
+          });
+        } else {
+          resolve();
+        }
+      }
+    });
+  });
+}
+
+exports.addTracking = function (orderId, body, api_key) {
+  return new Promise(function (resolve, reject) {
+    console.log('updating order...' + orderId);
+    Order.findOne({ _id: new ObjectId(orderId) }).exec(function (err, order) {
+      if (err) {
+        console.log(err);
+      } else {
+        if (order) {
+          var tracking = order.trackings.create(body);
+          order.trackings.push(tracking);
+          order.save(function (err) {
+            if (err) {
+              console.log(err);
+              resolve();
+            } else {
+              resolve(tracking);
             }
           });
         } else {
