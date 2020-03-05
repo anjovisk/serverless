@@ -27,3 +27,14 @@ module.exports.getTrackings = function getTrackings (req, res, next) {
       utils.writeJson(res, response);
     });
 };
+
+module.exports.findByTrackingNumber = function getTrackings (req, res, next) {
+  var trackingNumber = req.swagger.params['trackingNumber'].value;
+  Trackings.getTrackingsByTrackingNumber(trackingNumber)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
