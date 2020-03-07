@@ -73,7 +73,6 @@ paths:
         "405":
           description: "Invalid input"
       x-swagger-router-controller: "Orders"
-  /orders/{orderId}:
     get:
       tags:
       - "orders"
@@ -88,7 +87,7 @@ paths:
         required: false
         type: "string"
       - name: "orderId"
-        in: "path"
+        in: "query"
         description: "Id do pedido"
         required: true
         type: "string"
@@ -115,7 +114,7 @@ paths:
         required: false
         type: "string"
       - name: "orderId"
-        in: "path"
+        in: "query"
         description: "Id do pedido"
         required: true
         type: "string"
@@ -150,7 +149,7 @@ paths:
         required: false
         type: "string"
       - name: "orderId"
-        in: "path"
+        in: "query"
         description: "Id do pedido que será excluído"
         required: true
         type: "string"
@@ -160,7 +159,7 @@ paths:
         "404":
           description: "Pedido não encontrado"
       x-swagger-router-controller: "Orders"
-  /orders/{orderId}/trackings:
+  /orders/trackings:
     get:
       tags:
       - "trackings"
@@ -175,7 +174,7 @@ paths:
         required: false
         type: "string"
       - name: "orderId"
-        in: "path"
+        in: "query"
         description: "Id do pedido"
         required: true
         type: "string"
@@ -204,7 +203,7 @@ paths:
         required: false
         type: "string"
       - name: "orderId"
-        in: "path"
+        in: "query"
         description: "Id do pedido"
         required: true
         type: "string"
