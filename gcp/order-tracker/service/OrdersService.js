@@ -70,6 +70,7 @@ exports.getOrderById = function (orderId, api_key) {
     Order.findOne({ _id: new ObjectId(orderId) }).exec(function (err, order) {
       if (err) {
         console.log(err);
+        resolve();
       } else {
         resolve(order);
       }
@@ -92,16 +93,15 @@ exports.updateOrder = function (orderId, body, api_key) {
     Order.findOne({ _id: new ObjectId(orderId) }).exec(function (err, order) {
       if (err) {
         console.log(err);
+        resolve();
       } else {
         if (order) {
           order.orderNumber = body.orderNumber;
           order.save(function (err) {
             if (err) {
               console.log(err);
-              resolve();
-            } else {
-              resolve(updatedOrder);
             }
+            resolve();
           });
         } else {
           resolve();

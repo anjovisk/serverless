@@ -11,7 +11,7 @@ module.exports.addOrder = function addOrder (req, res, next) {
       utils.writeJson(res, response);
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(res, response, 405);
     });
 };
 
@@ -23,7 +23,7 @@ module.exports.deleteOrder = function deleteOrder (req, res, next) {
       utils.writeJson(res, response);
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(res, response, 404);
     });
 };
 
@@ -35,7 +35,7 @@ module.exports.getOrderById = function getOrderById (req, res, next) {
       utils.writeJson(res, response);
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(res, response, 404);
     });
 };
 
@@ -48,6 +48,6 @@ module.exports.updateOrder = function updateOrder (req, res, next) {
       utils.writeJson(res, response);
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(res, response, 404);
     });
 };

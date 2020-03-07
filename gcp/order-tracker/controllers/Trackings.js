@@ -12,7 +12,7 @@ module.exports.addTracking = function addTracking (req, res, next) {
       utils.writeJson(res, response);
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(res, response, 404);
     });
 };
 
@@ -24,7 +24,7 @@ module.exports.getTrackings = function getTrackings (req, res, next) {
       utils.writeJson(res, response);
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(res, response, 404);
     });
 };
 
@@ -35,6 +35,6 @@ module.exports.findByTrackingNumber = function getTrackings (req, res, next) {
       utils.writeJson(res, response);
     })
     .catch(function (response) {
-      utils.writeJson(res, response);
+      utils.writeJson(res, response, 404);
     });
 };
