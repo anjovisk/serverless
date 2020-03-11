@@ -101,7 +101,7 @@ exports.updateOrder = function (orderId, body, api_key) {
             if (err) {
               console.log(err);
             }
-            resolve();
+            resolve(order);
           });
         } else {
           resolve();

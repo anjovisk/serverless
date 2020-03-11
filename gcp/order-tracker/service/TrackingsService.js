@@ -18,6 +18,7 @@ exports.addTracking = function (orderId, body, api_key) {
         console.log(err);
       } else {
         if (order) {
+          order.lastUpdate = new Date();
           console.log(body);
           if (!order.movements) {
             order.movements = [];
@@ -25,6 +26,30 @@ exports.addTracking = function (orderId, body, api_key) {
           console.log(order.movements);
           var tracking = order.movements.create(body);
           order.movements.push(tracking);
+          switch (tracking.movement) {
+            case "MOVEMENT":
+              if (order.status == "POSTED")
+                order.status = "ON_ROUTE";
+              else if (order.status == "DELIVERY_FAILED")
+                order.status = "RETURNING";
+              break;
+            case "OUT_FOR_DELIVERY":
+              if ((order.status == "ON_ROUTE") || (order.status == "DELIVERY_FAILED"))
+                order.status = "OUT_FOR_DELIVERY";
+              break;
+            case "DELIVERY_FAILED":
+              if (order.status == "OUT_FOR_DELIVERY")
+                order.status = "DELIVERY_FAILED";
+              break;
+            case "DELIVERED":
+              if (order.status == "OUT_FOR_DELIVERY")
+                order.status = "DELIVERED";
+              break;
+            case "RETURNED":
+              if (order.status == "RETURNING")
+                order.status = "RETURNED";
+              break;
+          }
           order.save(function (err) {
             if (err) {
               console.log(err);
