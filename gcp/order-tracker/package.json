@@ -11,7 +11,7 @@
   "dependencies": {
     "js-yaml": "^3.3.0",
     "mongoose": "^5.9.2",
-    "swagger-tools": "0.10.1",
+    "swagger-tools": "0.10.4",
     "uuid": "^7.0.1"
   }
 }
